@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>
+        Creación de base de datos en python
+    </h1>
+
+    <p>
+        import time <br>
+        import sqlite3 as sql <br>
+        def createDB():# Crear o conectar a la BD 'autoconocimiento.db' <br>
+        conn = sql.connect("autoconocimiento.db") <br>
+        print("Base de datos creada o conectada correctamente.")<br>
+        conn.close()<br>
+        if __name__ == "__main__":<br>
+        createDB()     # Primero creamos la base de datos<br>
+
+    </p>
+
+    <img src="creacionbd.png" alt="">
+
+    <p>
+        def createTable(): <br> 
+    conn = sql.connect("autoconocimiento.db")<br>
+    cursor = conn.cursor()<br>
+    cursor.execute("""<br>
+                   CREATE TABLE IF NOT EXISTS users (<br>
+                    user_id INTEGER PRIMARY KEY AUTOINCREMENT,<br>
+                    full_name TEXT NOT NULL,<br>
+                    email TEXT UNIQUE NOT NULL,<br>
+                    password_hash TEXT NOT NULL,<br>
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP<br>
+                    ); """)<br>
+    print("tabla creada exitosamente")<br>
+    </p>
+
+    <img src="creartabla.png" alt="">
+
+</body>
+</html>
+
