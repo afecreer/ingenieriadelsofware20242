@@ -32,15 +32,15 @@ import sqlite3 as sql
 #     finally:
 #         conn.close()
 
-def readRows():
-    conn = sql.connect("autoconocimientoFelipeCruz.db")
-    cursor = conn.cursor()
-    instruction = f"SELECT * FROM users"
-    cursor.execute(instruction)
-    datos = cursor.fetchall()
-    conn.commit()
-    conn.close()
-    print(datos)
+# def readRows():
+#     conn = sql.connect("autoconocimientoFelipeCruz.db")
+#     cursor = conn.cursor()
+#     instruction = f"SELECT * FROM users"
+#     cursor.execute(instruction)
+#     datos = cursor.fetchall()
+#     conn.commit()
+#     conn.close()
+#     print(datos)
 
 if __name__ == "__main__":
     #createDB()     # Primero creamos la base de datos
