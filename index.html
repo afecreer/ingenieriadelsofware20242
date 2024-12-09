@@ -6,41 +6,186 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>
-        Creación de base de datos en python
-    </h1>
+    <h1>Creación de una base de datos con python</h1>
+   <p>
+    import time <br>
+import sqlite3 as sql <br>
+def createDB():# Crear o conectar a la BD 'autoconocimiento.db' <br>
+conn = sql.connect("autoconocimiento.db") <br>
+print("Base de datos creada o conectada correctamente.") <br>
+conn.close() <br>
+if __name__ == "__main__": <br>
+createDB() # Primero creamos la base de datos <br>
+   </p> 
 
-    <p>
-        import time <br>
-        import sqlite3 as sql <br>
-        def createDB():# Crear o conectar a la BD 'autoconocimiento.db' <br>
-        conn = sql.connect("autoconocimiento.db") <br>
-        print("Base de datos creada o conectada correctamente.")<br>
-        conn.close()<br>
-        if __name__ == "__main__":<br>
-        createDB()     # Primero creamos la base de datos<br>
+<img src="creacionbdFelipeCruz.PNG" alt="">
 
-    </p>
-
-    <img src="creacionbd.png" alt="">
-
-    <p>
-        def createTable(): <br> 
-    conn = sql.connect("autoconocimiento.db")<br>
-    cursor = conn.cursor()<br>
-    cursor.execute("""<br>
+<h1>Creación de tabla</h1>
+<p>
+    def createTable():  <br>
+    conn = sql.connect("autoconocimientoFelipeCruz.db") <br>
+    cursor = conn.cursor() <br>
+    cursor.execute(""" <br>
                    CREATE TABLE IF NOT EXISTS users (<br>
-                    user_id INTEGER PRIMARY KEY AUTOINCREMENT,<br>
-                    full_name TEXT NOT NULL,<br>
+                    user_id INTEGER PRIMARY KEY AUTOINCREMENT, <br>
+                    full_name TEXT NOT NULL, <br>
                     email TEXT UNIQUE NOT NULL,<br>
-                    password_hash TEXT NOT NULL,<br>
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP<br>
-                    ); """)<br>
-    print("tabla creada exitosamente")<br>
-    </p>
+                    password_hash TEXT NOT NULL, <br>
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP <br>
+                    ); """) <br>
+    print("tabla creada exitosamente")     <br>
+</p>
+    <img src="creartablaFelipeCruz.PNG" alt="">
 
-    <img src="creartabla.png" alt="">
+<h1>Inserción de datos</h1>
 
+<p>
+    def insertRow(user_id,full_name, email, password_hash, created_at): <br>
+    try: <br>
+        conn = sql.connect("autoconocimiento.db") <br>
+        cursor = conn.cursor() <br>
+        instruction = f"INSERT INTO users VALUES ('{user_id}','{full_name}','{email}','{password_hash}','{created_at}')" <br>
+        cursor.execute(instruction) <br>
+        conn.commit() <br>
+        print("fila de 'users' insertada correctamente.") <br>
+    except sql.OperationalError as e: <br>
+        time.sleep(1) #espera de 1 segundo antes de reintentar <br>
+        insertRow(user_id,full_name,email,password_hash,created_at) <br>
+    finally: <br>
+        conn.close() <br>
+
+</p>
+
+<img src="inserciondatosFelipeCruz.PNG" alt="">
+
+<h1>Lectura de datos</h1>
+
+<p>
+    def readRows(): <br>
+    conn = sql.connect("autoconocimientoFelipeCruz.db") <br>
+    cursor = conn.cursor() <br>
+    instruction = f"SELECT * FROM users" <br>
+    cursor.execute(instruction) <br>
+    datos = cursor.fetchall() <br>
+    conn.commit() <br>
+    conn.close() <br>
+    print(datos) <br>
+
+</p>
+<img src="lecturaFelipeCruz.PNG" alt="">
+
+<h1>Actualización de datos</h1>
+
+<p>
+    def updateRow(user_id, full_name=None, email=None, password_hash=None): <br>
+    """ <br>
+    Actualiza una fila en la tabla 'users' con base en el user_id. <br>
+    Los parámetros no proporcionados no se actualizan. <br>
+    """ <br>
+    try: <br>
+        conn = sql.connect("autoconocimientoFelipeCruz.db") <br>
+        cursor = conn.cursor() <br>
+        <br>
+        # Construir la instrucción SQL dinámicamente según los parámetros proporcionados <br>
+        updates = [] <br>
+        if full_name: <br>
+            updates.append(f"full_name = '{full_name}'") <br>
+        if email:<br>
+            updates.append(f"email = '{email}'") <br>
+        if password_hash: <br>
+            updates.append(f"password_hash = '{password_hash}'") <br>
+            <br>
+        if not updates: <br>
+            print("No se proporcionaron campos para actualizar.") <br>
+            return <br>
+
+        instruction = f"UPDATE users SET {', '.join(updates)} WHERE user_id = {user_id}" <br>
+        cursor.execute(instruction) <br>
+        conn.commit() <br>
+        <br>
+        if cursor.rowcount > 0: <br>
+            print(f"Usuario con ID {user_id} actualizado correctamente.") <br>
+        else: <br>
+            print(f"No se encontró un usuario con ID {user_id}.") <br>
+    except sql.Error as e: <br>
+        print(f"Error al actualizar el usuario: {e}") <br>
+    finally: <br>
+        conn.close() <br>
+
+</p>
+
+<img src="actualizaciondedatosentabla.png" alt="">
+
+<h1>Borrar un registro de una tabla</h1>
+
+<p>
+    def deleteRow(user_id): <br>
+    """ <br>
+    Elimina un registro de la tabla 'users' según su ID. <br>
+    
+    Args: <br>
+    user_id (int): ID del usuario que se desea eliminar. <br>
+    """ <br>
+    try: <br>
+        conn = sql.connect("autoconocimientoFelipeCruz.db") <br>
+        cursor = conn.cursor() <br>
+        <br>
+        # Instrucción para eliminar el registro <br>
+        instruction = f"DELETE FROM users WHERE user_id = {user_id}" <br>
+        <br>
+        cursor.execute(instruction) <br>
+        conn.commit() <br>
+        <br>
+        if cursor.rowcount > 0: <br>
+            print(f"Usuario con ID {user_id} eliminado correctamente.") <br>
+        else: <br>
+            print(f"No se encontró ningún usuario con ID {user_id}.") <br>
+            <br>
+    except sql.OperationalError as e: <br>
+        print(f"Error en la operación: {e}") <br>
+    finally: <br>
+        conn.close() <br>
+        <br>
+if __name__ == "__main__": <br>
+    #createDB()     # Primero creamos la base de datos <br>
+    #createTable() <br>
+    #insertRow(70000,"Luisa Holguin Perez","Luisap@gmail.com","1234Luisa",3/12/2024) <br>
+    #insertRow(80000,"Hernando Falcao","hfalcao@gmail.com","1234Falcao",9/12/2024) <br>
+    <br>
+    #readRows() <br>
+    #updateRow(user_id=80000, full_name="Hernado Jose Falcao Perea") <br>
+    <br>
+    # Actualizar el correo y la contraseña del usuario con ID 70000 <br>
+    #updateRow(user_id=70000, email="luisa_new@gmail.com", password_hash="newpassword1234") <br>
+    <br>
+    deleteRow(80000)  # Elimina el usuario con ID 80000 <br>
+</p>
+
+<img src="borradoderegistro.png" alt="">
+
+<h1>Gestión de datos mediante una página web</h1>
+
+<p> El siguiente código contiene la interfaz web para almacenar datos en <br>
+     una base de datos creada usando python el cual iría dentro del body<br><br>
+    
+    <h1>Gestión de Usuarios</h1> <br>
+    <form action="/create" method="post"> <br>
+        <h2>Crear Usuario</h2> <br>
+        <input type="text" name="full_name" placeholder="Nombre Completo" required> <br>
+        <input type="email" name="email" placeholder="Correo Electrónico" required> <br>
+        <input type="password" name="password_hash" placeholder="Contraseña" required> <br>
+        <button type="submit">Crear</button> <br>
+    </form> <br>
+    <h2>Operaciones CRUD desde Postman o Navegador</h2> <br> 
+    <p>- Leer usuarios: GET a /read</p> <br>
+    <p>- Actualizar usuario: PUT a /update/`<id>`</p> <br>
+    <p>- Eliminar usuario: DELETE a /delete/`<id>`</p> <br>
+</p>
+<p>
+   El uso de flask implica que la página web debe estar dentro una carpeta denominada
+   templates, como se muestra en la siguiente imágen: 
+</p>
+
+<img src="uso de python y flask.png" alt="">
 </body>
 </html>
-
